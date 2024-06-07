@@ -148,6 +148,8 @@ public:
 			env->_workStack.push(env, (void *)objectPtr);
 		}
 
+		_delegate.dumpObjectCounter(objectPtr, env->compressObjectReferences());
+
 		env->_markStats._objectsMarked += 1;
 
 		return true;

@@ -297,7 +297,8 @@ MM_MainGCThread::garbageCollect(MM_EnvironmentBase *env, MM_AllocateDescription 
 		/* the collector has started up so try to run */
 		/* once the main thread has stored itself in the _mainGCThread, it should never need to collect - this would hang */
 		Assert_MM_true(omrthread_self() != _mainGCThread);
-		if (_runAsImplicit || (NULL == _mainGCThread)) {
+		// if (_runAsImplicit || (NULL == _mainGCThread)) {
+		if (_runAsImplicit || (NULL == _mainGCThread)) { // TODO: Replace _runAsImplicit with true if need execution
 			/* We might not have _mainGCThread in the startup phase or late in the shutdown phase.
 			 * For example, there may be a native out-of-memory during startup or RAS may 
 			 * trigger a GC after we've shutdown the main thread.
