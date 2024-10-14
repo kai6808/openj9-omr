@@ -136,6 +136,7 @@ MM_ConfigurationStandard::createCollectors(MM_EnvironmentBase* env)
 MM_Heap*
 MM_ConfigurationStandard::createHeapWithManager(MM_EnvironmentBase* env, uintptr_t heapBytesRequested, MM_HeapRegionManager* regionManager)
 {
+	printf("This is createHeapWithManager in omr/gc/base.\n");
 	return MM_HeapVirtualMemory::newInstance(env, env->getExtensions()->heapAlignment, heapBytesRequested, regionManager);
 }
 

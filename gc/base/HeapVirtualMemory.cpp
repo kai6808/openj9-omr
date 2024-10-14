@@ -62,6 +62,8 @@ MM_HeapVirtualMemory::newInstance(MM_EnvironmentBase* env, uintptr_t heapAlignme
 			heap = NULL;
 		}
 	}
+
+	printf("[HeapVirtualMemory] heapbase: %p\n", heap->getHeapBase());
 	return heap;
 }
 
