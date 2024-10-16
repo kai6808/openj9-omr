@@ -112,3 +112,23 @@ MM_MarkMap::initializeMarkMap(MM_EnvironmentBase *env)
 		}
 	}
 }
+
+void
+MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file)
+{
+	assert(file != NULL);
+	assert(_heapMapBits != NULL);
+
+	MM_GCExtensionsBase *extensions = env->getExtensions();
+	MM_MemoryManager *memoryManager = extensions->memoryManager;
+
+	uintptr_t heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
+	uintptr_t heapMapSize = memoryManager->getMaximumSize(&_heapMapMemoryHandle);
+
+	assert(heapMapTop > _heapMapBits);
+	assert(heapMapTop == _heapMapBits + heapMapSize);
+
+	for (uintptr_t i = 0; i < heapMapSize; i++) {
+		fprintf(file, "%p: %02x\n", _heapMapBits + i, *(_heapMapBits + i));
+	}
+}
