@@ -36,6 +36,7 @@
 #include "Task.hpp"
 
 #include "ModronAssertions.h"
+#include <cstdio>
 
 bool
 MM_CardTable::initialize(MM_EnvironmentBase *env, MM_Heap *heap)
@@ -427,3 +428,21 @@ MM_CardTable::setNumaAffinityCorrespondingToHeapRange(MM_EnvironmentBase *env, u
 }
 #endif /* defined(OMR_GC_VLHGC) */
 
+bool
+MM_CardTable::dumpCardTable(MM_EnvironmentBase *env)
+{
+	MM_GCExtensionsBase *extensions = env->getExtensions();
+	MM_MemoryManager *memoryManager = extensions->memoryManager;
+
+	dumpCardTableRange(_cardTableStart, (Card *)memoryManager->getHeapTop(&_cardTableMemoryHandle));
+
+	return true;
+}
+
+void
+MM_CardTable::dumpCardTableRange(Card *firstCard, Card *lastCard)
+{
+	for (Card* currentCard = firstCard; currentCard < lastCard; currentCard++) {
+		printf("Card %p: 0x%02x\n", currentCard, *currentCard);
+	}
+}

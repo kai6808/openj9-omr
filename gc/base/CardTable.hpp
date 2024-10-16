@@ -233,6 +233,20 @@ public:
 	bool setNumaAffinityCorrespondingToHeapRange(MM_EnvironmentBase *env, uintptr_t numaNode, void *baseOfHeapRange, void *topOfHeapRange);
 #endif /* defined(OMR_GC_VLHGC) */
 
+	/**
+	 * Dump the card table to a file. (For debugging purposes, and now only prints to stdout)
+	 * @param[in] env The main GC thread
+	 * @return True if the dump was successful
+	 */
+	bool dumpCardTable(MM_EnvironmentBase *env);
+
+	/**
+	 * Dump the card table range to a file. (For debugging purposes, and now only prints to stdout)
+	 * @param[in] FirstCard The first card in the range to be dumped
+	 * @param[in] LastCard The card following the last card in the range to be dumped
+	 */
+	void dumpCardTableRange(Card *FirstCard, Card *LastCard);
+
 protected:
 	/**
 	 * Initialize a new card table object. This involves the instantiation
