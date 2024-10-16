@@ -34,6 +34,8 @@
 
 #include "HeapMap.hpp"
 
+#include <cstdio>
+
 #define J9MODRON_HEAP_SLOTS_PER_MARK_BIT  J9MODRON_HEAP_SLOTS_PER_HEAPMAP_BIT
 #define J9MODRON_HEAP_SLOTS_PER_MARK_SLOT J9MODRON_HEAP_SLOTS_PER_HEAPMAP_SLOT
 #define J9MODRON_HEAP_BYTES_PER_MARK_BYTE J9MODRON_HEAP_BYTES_PER_HEAPMAP_BYTE
@@ -115,6 +117,24 @@ public:
 #error Card size has to be exactly 512 bytes
 #endif
 		return 0 != *(uint64_t*)getSlotPtrForAddress((omrobjectptr_t) heapAddress);
+	}
+
+	MMINLINE void dumpMarkMap(MM_EnvironmentBase *env, FILE *file) {
+		assert(file != NULL);
+		assert(_heapMapBits != NULL);
+
+		MM_GCExtensionsBase *extensions = env->getExtensions();
+		MM_MemoryManager *memoryManager = extensions->memoryManager;
+
+		uintptr_t heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
+		uintptr_t heapMapSize = memoryManager->getMaximumSize(&_heapMapMemoryHandle);
+
+		assert(heapMapTop > _heapMapBits);
+		assert(heapMapTop == _heapMapBits + heapMapSize);
+
+		for (uintptr_t i = 0; i < heapMapSize; i++) {
+			fprintf(file, "%p: %02x\n", _heapMapBits + i, *(_heapMapBits + i));
+		}
 	}
 
 	/**
