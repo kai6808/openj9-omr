@@ -114,7 +114,7 @@ MM_MarkMap::initializeMarkMap(MM_EnvironmentBase *env)
 }
 
 void
-MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file)
+MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file, uintptr_t numPages)
 {
 	assert(file);
 	assert(_heapMapBits);
@@ -127,9 +127,9 @@ MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file)
 	
 	fprintf(file, "mark map base: %p, top: %p, size: 0x%lx, num of long hex(8 bytes): %lu\n", _heapMapBits, heapMapTop,  heapMapSize, heapMapSize/sizeof(uintptr_t));
 
-	// dump first 8 pages: each page -> 8 long hex in mark map
-	for (uintptr_t i = 0; i < 8; i++) {
-		fprintf(file, "Page %lu (value in 0x):\n", i);
+	// each page -> 8 uintptr_t in mark map
+	for (uintptr_t i = 0; i < numPages; i++) {
+		fprintf(file, "Page %lu: 0x", i);
 		for (uintptr_t j = 0; j < 8; j++) {
 			fprintf(file, "%016lx",
 					*(_heapMapBits + i * 8 + j)

@@ -58,7 +58,7 @@ public:
  	
  	void initializeMarkMap(MM_EnvironmentBase *env);
 
-	void dumpMarkMap(MM_EnvironmentBase* env, FILE* file);
+	void dumpMarkMap(MM_EnvironmentBase* env, FILE* file, uintptr_t numPages);
 
 	MMINLINE void *getMarkBits() { return _heapMapBits; };
  	
