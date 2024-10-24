@@ -116,19 +116,37 @@ MM_MarkMap::initializeMarkMap(MM_EnvironmentBase *env)
 void
 MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file)
 {
-	assert(file != NULL);
-	assert(_heapMapBits != NULL);
+	assert(file);
+	assert(_heapMapBits);
 
 	MM_GCExtensionsBase *extensions = env->getExtensions();
 	MM_MemoryManager *memoryManager = extensions->memoryManager;
 
-	uintptr_t heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
+	void *heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
 	uintptr_t heapMapSize = memoryManager->getMaximumSize(&_heapMapMemoryHandle);
 
-	assert(heapMapTop > _heapMapBits);
-	assert(heapMapTop == _heapMapBits + heapMapSize);
+	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits, *_heapMapBits);
+	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits+1, *(_heapMapBits+1));
+	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits+2, *(_heapMapBits+2));
 
-	for (uintptr_t i = 0; i < heapMapSize; i++) {
-		fprintf(file, "%p: %02x\n", _heapMapBits + i, *(_heapMapBits + i));
+	fprintf(file, "mark map base: %p\n", _heapMapBits);
+	fprintf(file, "mark map top: %p\n", heapMapTop);
+	fprintf(file, "Dump complete. Heap map size: %lu = %lx\n", heapMapSize, heapMapSize);
+	fprintf(file, "void heapmapbits: %p\n", (void*)_heapMapBits[0]);
+	fprintf(file, "void heapmapbits: %p\n", (void*)(_heapMapBits+1));
+
+	fprintf(file, "number of long hex (64-bits) to dump: %lu\n", heapMapSize/sizeof(uintptr_t));
+
+	for (uintptr_t i = 0; i < 10; i++) {
+		fprintf(file, "Index %lu - Address: %p, Value: 0x%lx\n",
+				i,
+				_heapMapBits + i,
+				*(_heapMapBits + i)
+		);
 	}
+	fprintf(file, "large space - Address: %p, Value: 0x%lx\n",
+			(uintptr_t*)heapMapTop -1,
+			*((uintptr_t*)heapMapTop - 1)
+	);
+
 }

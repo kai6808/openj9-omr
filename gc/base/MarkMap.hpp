@@ -33,6 +33,7 @@
 #include "omrmodroncore.h"
 
 #include "HeapMap.hpp"
+#include "MemoryManager.hpp"
 
 #include <cstdio>
 
