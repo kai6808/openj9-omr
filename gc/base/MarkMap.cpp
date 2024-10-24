@@ -124,29 +124,18 @@ MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file)
 
 	void *heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
 	uintptr_t heapMapSize = memoryManager->getMaximumSize(&_heapMapMemoryHandle);
+	
+	fprintf(file, "mark map base: %p, top: %p, size: 0x%lx, num of long hex(8 bytes): %lu\n", _heapMapBits, heapMapTop,  heapMapSize, heapMapSize/sizeof(uintptr_t));
 
-	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits, *_heapMapBits);
-	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits+1, *(_heapMapBits+1));
-	fprintf(file, "Dumping mark map start data ptr: %p, start data: %lx\n", _heapMapBits+2, *(_heapMapBits+2));
-
-	fprintf(file, "mark map base: %p\n", _heapMapBits);
-	fprintf(file, "mark map top: %p\n", heapMapTop);
-	fprintf(file, "Dump complete. Heap map size: %lu = %lx\n", heapMapSize, heapMapSize);
-	fprintf(file, "void heapmapbits: %p\n", (void*)_heapMapBits[0]);
-	fprintf(file, "void heapmapbits: %p\n", (void*)(_heapMapBits+1));
-
-	fprintf(file, "number of long hex (64-bits) to dump: %lu\n", heapMapSize/sizeof(uintptr_t));
-
-	for (uintptr_t i = 0; i < 10; i++) {
-		fprintf(file, "Index %lu - Address: %p, Value: 0x%lx\n",
-				i,
-				_heapMapBits + i,
-				*(_heapMapBits + i)
-		);
+	// dump first 8 pages: each page -> 8 long hex in mark map
+	for (uintptr_t i = 0; i < 8; i++) {
+		fprintf(file, "Page %lu (value in 0x):\n", i);
+		for (uintptr_t j = 0; j < 8; j++) {
+			fprintf(file, "%016lx",
+					*(_heapMapBits + i * 8 + j)
+			);
+		}
+		fprintf(file, "\n");
 	}
-	fprintf(file, "large space - Address: %p, Value: 0x%lx\n",
-			(uintptr_t*)heapMapTop -1,
-			*((uintptr_t*)heapMapTop - 1)
-	);
 
 }
