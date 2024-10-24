@@ -125,7 +125,7 @@ MM_MarkMap::dumpMarkMap(MM_EnvironmentBase *env, FILE *file, uintptr_t numPages)
 	void *heapMapTop = memoryManager->getHeapTop(&_heapMapMemoryHandle);
 	uintptr_t heapMapSize = memoryManager->getMaximumSize(&_heapMapMemoryHandle);
 	
-	fprintf(file, "mark map base: %p, top: %p, size: 0x%lx, num of long hex(8 bytes): %lu\n", _heapMapBits, heapMapTop,  heapMapSize, heapMapSize/sizeof(uintptr_t));
+	fprintf(file, "mark map base: %p, top: %p, size: 0x%lx, num of uintptr_t(8 bytes): %lu\n", _heapMapBits, heapMapTop,  heapMapSize, heapMapSize/sizeof(uintptr_t));
 
 	// each page -> 8 uintptr_t in mark map
 	for (uintptr_t i = 0; i < numPages; i++) {
